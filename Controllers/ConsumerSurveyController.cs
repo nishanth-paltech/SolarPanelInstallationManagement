@@ -98,5 +98,34 @@ namespace SolarPanelInstallationManagement.Controllers
             await _service.DeleteAsync(id);
             return Ok();
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AddEdit(int? id)
+        {
+            if (id == null)
+                return PartialView("_AddEditModal", new ConsumerSurvey());
+
+            var entity = await _service.GetByIdAsync(id.Value);
+            if (entity == null)
+                return NotFound();
+
+            return PartialView("_AddEditModal", entity);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddEdit(ConsumerSurvey model)
+        {
+            if (!ModelState.IsValid)
+                return PartialView("_AddEditModal", model);
+
+            if (model.Sno == 0)
+                await _service.AddAsync(model);
+            else
+                await _service.UpdateAsync(model);
+
+            return Json(new { success = true });
+        }
+
     }
 }

@@ -1,0 +1,54 @@
+﻿@model SolarPanelInstallationManagement.Models.Entities.ConsumerSurvey
+
+<form id="addEditForm" asp-action="AddEdit" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Sno" />
+
+    <div class="modal-header">
+        <h5 class="modal-title">
+            @(Model.Sno == 0 ? "Add Consumer Survey" : "Edit Consumer Survey")
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+
+    <div class="modal-body">
+        <div class="row g-3">
+
+            <div class="col-md-4">
+                <label asp-for="District" class="form-label"></label>
+                <input asp-for="District" class="form-control" />
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="Mandal" class="form-label"></label>
+                <input asp-for="Mandal" class="form-control" />
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="Village" class="form-label"></label>
+                <input asp-for="Village" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="ConsumerNameWithSurname" class="form-label"></label>
+                <input asp-for="ConsumerNameWithSurname" class="form-control" />
+            </div>
+
+            <div class="col-md-6">
+                <label asp-for="ServiceNumber" class="form-label"></label>
+                <input asp-for="ServiceNumber" class="form-control" />
+            </div>
+
+            <div class="col-md-4">
+                <label asp-for="ConsumerMobileNo" class="form-label"></label>
+                <input asp-for="ConsumerMobileNo" class="form-control" />
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+    </div>
+</form>
