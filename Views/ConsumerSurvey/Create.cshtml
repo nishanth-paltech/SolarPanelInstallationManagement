@@ -1,0 +1,22 @@
+﻿@model SolarPanelInstallationManagement.Models.Entities.ConsumerSurvey
+
+@{
+    ViewData["Title"] = "Create Consumer Survey";
+}
+
+<div class="container mt-4">
+    <h3>Create Consumer Survey</h3>
+
+    <form asp-action="Create" method="post" class="mt-3">
+        <partial name="_ConsumerSurveyForm" model="Model" />
+
+        <div class="mt-4">
+            <button type="submit" class="btn btn-success">Save</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
