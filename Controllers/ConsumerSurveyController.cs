@@ -87,7 +87,7 @@ namespace SolarPanelInstallationManagement.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            await _service.UpdateAsync(model);
+            //await _service.UpdateAsync(model);
             return RedirectToAction(nameof(Index));
         }
 

@@ -26,6 +26,8 @@ namespace SolarPanelInstallationManagement
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IConsumerSurveyRepository, ConsumerSurveyRepository>();
             builder.Services.AddScoped<IConsumerSurveyService, ConsumerSurveyService>();
+            builder.Services.AddScoped<IConsumerSurveyAttachmentService,
+                           ConsumerSurveyAttachmentService>();
 
 
             var app = builder.Build();
@@ -38,7 +40,7 @@ namespace SolarPanelInstallationManagement
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
@@ -49,7 +51,7 @@ namespace SolarPanelInstallationManagement
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            // //Seed data insertions from excel
+            //Seed data insertions from excel
             //using (var scope = app.Services.CreateScope())
             //{
             //    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();

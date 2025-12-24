@@ -19,10 +19,10 @@
                 <ul class="dropdown-menu p-3" id="columnToggleMenu"></ul>
             </div>
 
-            <!-- Add -->
+           @*  <!-- Add -->
             <button class="btn btn-primary" onclick="openAddEditModal()">
                 Add New
-            </button>
+            </button> *@
         </div>
     </div>
 
@@ -34,7 +34,7 @@
 
 <!-- ADD / EDIT MODAL -->
 <div class="modal fade" id="addEditModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content" id="addEditModalContent">
             <!-- loaded dynamically -->
         </div>
@@ -45,6 +45,7 @@
 
     <script>
         var table;
+        let currentSurveySno = null;
 
         $(document).ready(function () {
 
@@ -140,9 +141,17 @@
             if (id) url += '?id=' + id;
 
             $('#addEditModalContent').load(url, function () {
-                new bootstrap.Modal(
+
+                var modal = new bootstrap.Modal(
                     document.getElementById('addEditModal')
-                ).show();
+                );
+                modal.show();
+
+                // 🔥 THIS IS CRITICAL
+                if (id) {
+                    currentSurveySno = id;
+                    loadAttachments(id);
+                }
             });
         }
 
@@ -165,12 +174,183 @@
             });
         });
 
+        function uploadAttachments() {
+
+            var surveySno = $('#surveySno').val();
+            var filesInput = document.getElementById('attachmentFiles');
+
+            if (!filesInput.files.length) {
+                alert('Please select files');
+                return;
+            }
+
+            var formData = new FormData();
+            formData.append('surveySno', surveySno);
+
+            for (let i = 0; i < filesInput.files.length; i++) {
+                formData.append('files', filesInput.files[i]);
+            }
+
+            var progressContainer = $('#uploadProgress');
+            var progressBar = $('#uploadProgress .progress-bar');
+
+            progressBar.css('width', '0%').text('0%');
+            progressContainer.removeClass('d-none');
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    var percent = Math.round((e.loaded / e.total) * 100);
+                    progressBar.css('width', percent + '%').text(percent + '%');
+                }
+            };
+
+            xhr.onload = function () {
+                progressContainer.addClass('d-none');
+
+                if (xhr.status === 200) {
+                    $('#attachmentFiles').val('');
+                    $('#imagePreviewContainer').empty();
+                    loadAttachments(surveySno);
+                } else {
+                    alert(xhr.responseText || 'Upload failed');
+                }
+            };
+
+            xhr.onerror = function () {
+                progressContainer.addClass('d-none');
+                alert('Upload failed');
+            };
+
+            xhr.open('POST', '/ConsumerSurveyAttachment/Upload', true);
+
+            xhr.setRequestHeader(
+                'RequestVerificationToken',
+                $('input[name="__RequestVerificationToken"]').val()
+            );
+
+            xhr.send(formData);
+        }
+
+        // Inline image preview before upload
+        $(document).on('change', '#attachmentFiles', function () {
+
+            var previewContainer = $('#imagePreviewContainer');
+            previewContainer.empty();
+
+            var files = this.files;
+
+            if (!files || files.length === 0) return;
+
+            Array.from(files).forEach(file => {
+
+                if (!file.type.startsWith('image/')) return;
+
+                var imgUrl = URL.createObjectURL(file);
+
+                var html = `
+                    <div class="col-md-3">
+                        <img src="${imgUrl}"
+                             class="img-thumbnail"
+                             style="height:120px; object-fit:cover;" />
+                    </div>
+                `;
+
+                previewContainer.append(html);
+            });
+        });
+
         // Delete
         function deleteRecord(id) {
             if (!confirm('Are you sure you want to delete this record?')) return;
 
             $.post('/ConsumerSurvey/Delete/' + id, function () {
                 table.ajax.reload(null, false);
+            });
+        }
+
+        function loadAttachments(surveySno) {
+            $('#attachmentsContainer').load(
+                '/ConsumerSurveyAttachment/List/' + surveySno
+            );
+        }
+
+        // $(document).on('submit', '#attachmentUploadForm', function (e) {
+        //     e.preventDefault();
+
+        //     var form = this;
+        //     var formData = new FormData(form);
+        //     var progressContainer = $('#uploadProgress');
+        //     var progressBar = $('#uploadProgress .progress-bar');
+
+        //     progressBar.css('width', '0%').text('0%');
+        //     progressContainer.removeClass('d-none');
+
+        //     var xhr = new XMLHttpRequest();
+
+        //     xhr.upload.onprogress = function (e) {
+        //         if (e.lengthComputable) {
+        //             var percent = Math.round((e.loaded / e.total) * 100);
+        //             progressBar.css('width', percent + '%')
+        //                 .text(percent + '%');
+        //         }
+        //     };
+
+        //     xhr.onload = function () {
+        //         progressContainer.addClass('d-none');
+
+        //         if (xhr.status === 200) {
+        //             var surveySno = formData.get('surveySno');
+
+        //             // Reset file input + preview
+        //             $('#attachmentFiles').val('');
+        //             $('#imagePreviewContainer').empty();
+
+        //             loadAttachments(surveySno);
+        //         } else {
+        //             alert(xhr.responseText || 'Upload failed.');
+        //         }
+        //     };
+
+        //     xhr.onerror = function () {
+        //         progressContainer.addClass('d-none');
+        //         alert('Upload failed.');
+        //     };
+
+        //     xhr.open('POST', '/ConsumerSurveyAttachment/Upload', true);
+
+        //     // Anti-forgery token
+        //     xhr.setRequestHeader(
+        //         'RequestVerificationToken',
+        //         $('input[name="__RequestVerificationToken"]').val()
+        //     );
+
+        //     xhr.send(formData);
+        // });
+
+
+        // Delete attachment
+        function deleteAttachment(id, name) {
+            const displayName = name || 'this file';
+
+            if (!confirm(`Are you sure you want to delete "${displayName}"?`)) {
+                return;
+            }
+            $.ajax({
+                url: '/ConsumerSurveyAttachment/Delete/' + id,
+                type: 'POST',
+                headers: {
+                    'RequestVerificationToken':
+                        $('input[name="__RequestVerificationToken"]').val()
+                },
+                success: function () {
+                    // Reset file input + preview
+                    $('#attachmentFiles').val('');
+                    $('#imagePreviewContainer').empty();
+                    // Reload list
+                    loadAttachments(currentSurveySno);
+                }
             });
         }
     </script>

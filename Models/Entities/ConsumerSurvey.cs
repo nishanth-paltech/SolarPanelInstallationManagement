@@ -79,5 +79,7 @@ namespace SolarPanelInstallationManagement.Models.Entities
         public DateTime CreatedOn { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedOn { get; set; }
         public bool IsDeleted { get; set; } = false;
+        public ICollection<ConsumerSurveyAttachment> Attachments { get; set; }
+    = new List<ConsumerSurveyAttachment>();
     }
 }
