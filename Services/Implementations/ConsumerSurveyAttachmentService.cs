@@ -14,7 +14,7 @@ namespace SolarPanelInstallationManagement.Services.Implementations
         private readonly IWebHostEnvironment _env;
 
         // configuration (can move to appsettings later)
-        private const long MaxFileSize = 5 * 1024 * 1024; // 5 MB
+        private const long MaxFileSize = 20 * 1024 * 1024; // 5 MB
 
         private static readonly HashSet<string> AllowedExtensions =
             new(StringComparer.OrdinalIgnoreCase)
