@@ -95,11 +95,15 @@
                 orderable: false,
                 searchable: false,
                 render: function (data, type, row) {
+                    // return `
+                    //     <button class="btn btn-sm btn-warning me-1"
+                    //             onclick="openAddEditModal(${row.sno})">Edit</button>
+                    //     <button class="btn btn-sm btn-danger"
+                    //             onclick="deleteRecord(${row.sno})">Delete</button>
+                    // `;
                     return `
                         <button class="btn btn-sm btn-warning me-1"
-                                onclick="openAddEditModal(${row.sno})">Edit</button>
-                        <button class="btn btn-sm btn-danger"
-                                onclick="deleteRecord(${row.sno})">Delete</button>
+                                onclick="openAddEditModal(${row.sno})">Start Survey</button>
                     `;
                 }
             }

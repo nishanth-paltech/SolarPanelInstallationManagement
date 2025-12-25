@@ -49,41 +49,6 @@
                 <hr />
                 <h5 class="mt-3">Attachments</h5>
 
-                @* <form id="attachmentUploadForm"
-                      enctype="multipart/form-data">
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" name="surveySno" value="@Model.Sno" />
-
-                    <div class="row g-2 align-items-center">
-                        <div class="col-md-8">
-                            <input type="file"
-                                   id="attachmentFiles"
-                                   name="files"
-                                   class="form-control"
-                                   multiple />
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit"
-                                    class="btn btn-secondary w-100">
-                                Upload
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Progress bar -->
-                    <div class="progress mt-2 d-none" id="uploadProgress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                             role="progressbar"
-                             style="width: 0%">
-                            0%
-                        </div>
-                    </div>
-
-                    <!-- Inline image preview (before upload) -->
-                    <div id="imagePreviewContainer"
-                         class="row g-2 mt-3">
-                    </div>
-                </form> *@
                 <input type="hidden" id="surveySno" value="@Model.Sno" />
 
                 <div class="row g-2 align-items-center">
@@ -97,7 +62,7 @@
                         <button type="button"
                                 class="btn btn-secondary w-100"
                                 onclick="uploadAttachments()">
-                            Upload
+                            Upload and Save
                         </button>
                     </div>
                 </div>
