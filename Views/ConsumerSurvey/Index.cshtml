@@ -216,6 +216,11 @@
                 if (xhr.status === 200) {
                     $('#attachmentFiles').val('');
                     $('#imagePreviewContainer').empty();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Upload completed successfully'
+                    });
                     loadAttachments(surveySno);
                 } else {
                     alert(xhr.responseText || 'Upload failed');
@@ -267,10 +272,21 @@
 
         // Delete
         function deleteRecord(id) {
-            if (!confirm('Are you sure you want to delete this record?')) return;
-
-            $.post('/ConsumerSurvey/Delete/' + id, function () {
-                table.ajax.reload(null, false);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to delete this record!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.post('/ConsumerSurvey/Delete/' + id, function () {
+                        table.ajax.reload(null, false);
+                    });
+                }
             });
         }
 
@@ -280,80 +296,37 @@
             );
         }
 
-        // $(document).on('submit', '#attachmentUploadForm', function (e) {
-        //     e.preventDefault();
-
-        //     var form = this;
-        //     var formData = new FormData(form);
-        //     var progressContainer = $('#uploadProgress');
-        //     var progressBar = $('#uploadProgress .progress-bar');
-
-        //     progressBar.css('width', '0%').text('0%');
-        //     progressContainer.removeClass('d-none');
-
-        //     var xhr = new XMLHttpRequest();
-
-        //     xhr.upload.onprogress = function (e) {
-        //         if (e.lengthComputable) {
-        //             var percent = Math.round((e.loaded / e.total) * 100);
-        //             progressBar.css('width', percent + '%')
-        //                 .text(percent + '%');
-        //         }
-        //     };
-
-        //     xhr.onload = function () {
-        //         progressContainer.addClass('d-none');
-
-        //         if (xhr.status === 200) {
-        //             var surveySno = formData.get('surveySno');
-
-        //             // Reset file input + preview
-        //             $('#attachmentFiles').val('');
-        //             $('#imagePreviewContainer').empty();
-
-        //             loadAttachments(surveySno);
-        //         } else {
-        //             alert(xhr.responseText || 'Upload failed.');
-        //         }
-        //     };
-
-        //     xhr.onerror = function () {
-        //         progressContainer.addClass('d-none');
-        //         alert('Upload failed.');
-        //     };
-
-        //     xhr.open('POST', '/ConsumerSurveyAttachment/Upload', true);
-
-        //     // Anti-forgery token
-        //     xhr.setRequestHeader(
-        //         'RequestVerificationToken',
-        //         $('input[name="__RequestVerificationToken"]').val()
-        //     );
-
-        //     xhr.send(formData);
-        // });
-
 
         // Delete attachment
         function deleteAttachment(id, name) {
             const displayName = name || 'this file';
 
-            if (!confirm(`Are you sure you want to delete "${displayName}"?`)) {
-                return;
-            }
-            $.ajax({
-                url: '/ConsumerSurveyAttachment/Delete/' + id,
-                type: 'POST',
-                headers: {
-                    'RequestVerificationToken':
-                        $('input[name="__RequestVerificationToken"]').val()
-                },
-                success: function () {
-                    // Reset file input + preview
-                    $('#attachmentFiles').val('');
-                    $('#imagePreviewContainer').empty();
-                    // Reload list
-                    loadAttachments(currentSurveySno);
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'You want to delete ' + displayName + 'image!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/ConsumerSurveyAttachment/Delete/' + id,
+                        type: 'POST',
+                        headers: {
+                            'RequestVerificationToken':
+                                $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function () {
+                            // Reset file input + preview
+                            $('#attachmentFiles').val('');
+                            $('#imagePreviewContainer').empty();
+                            // Reload list
+                            loadAttachments(currentSurveySno);
+                        }
+                    });
                 }
             });
         }

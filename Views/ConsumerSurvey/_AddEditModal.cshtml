@@ -16,32 +16,32 @@
 
             <div class="col-md-4">
                 <label asp-for="District" class="form-label"></label>
-                <input asp-for="District" class="form-control" />
+                <input asp-for="District" class="form-control" readonly />
             </div>
 
             <div class="col-md-4">
                 <label asp-for="Mandal" class="form-label"></label>
-                <input asp-for="Mandal" class="form-control" />
+                <input asp-for="Mandal" class="form-control" readonly />
             </div>
 
             <div class="col-md-4">
                 <label asp-for="Village" class="form-label"></label>
-                <input asp-for="Village" class="form-control" />
+                <input asp-for="Village" class="form-control" readonly />
             </div>
 
             <div class="col-md-6">
                 <label asp-for="ConsumerNameWithSurname" class="form-label"></label>
-                <input asp-for="ConsumerNameWithSurname" class="form-control" />
+                <input asp-for="ConsumerNameWithSurname" class="form-control" readonly />
             </div>
 
             <div class="col-md-6">
                 <label asp-for="ServiceNumber" class="form-label"></label>
-                <input asp-for="ServiceNumber" class="form-control" />
+                <input asp-for="ServiceNumber" class="form-control" readonly />
             </div>
 
             <div class="col-md-4">
                 <label asp-for="ConsumerMobileNo" class="form-label"></label>
-                <input asp-for="ConsumerMobileNo" class="form-control" />
+                <input asp-for="ConsumerMobileNo" class="form-control" readonly />
             </div>
 
             @if (Model.Sno > 0)
@@ -62,7 +62,7 @@
                         <button type="button"
                                 class="btn btn-secondary w-100"
                                 onclick="uploadAttachments()">
-                            Upload and Save
+                            Upload
                         </button>
                     </div>
                 </div>
@@ -93,10 +93,11 @@
         </div>
     </div>
 
-    @* <div class="modal-footer">
-        <button type="submit" class="btn btn-success">Save</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-    </div> *@
+    <div class="modal-footer">
+        @* <button type="submit" class="btn btn-success">Save</button> *@
+        <button onclick="window.location.href='/ConsumerSurvey'" class="btn btn-success">Save</button>
+        @* <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button> *@
+    </div>
 </form>
 
 
