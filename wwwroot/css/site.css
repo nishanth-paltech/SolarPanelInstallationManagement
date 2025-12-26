@@ -92,3 +92,11 @@ footer {
     bottom: 0;
     width: 100%;
 }
+
+.modal-dialog-scrollable .modal-content {
+    max-height: none;
+}
+
+.modal-dialog-scrollable .modal-body {
+    overflow-y: auto;
+}

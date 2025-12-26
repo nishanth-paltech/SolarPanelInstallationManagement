@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SolarPanelInstallationManagement.Models.Entities;
 using SolarPanelInstallationManagement.Repositories.Contracts;
+using System.Reflection.Emit;
 
 namespace SolarPanelInstallationManagement.Data
 {
@@ -12,6 +13,7 @@ namespace SolarPanelInstallationManagement.Data
         }
 
         public DbSet<ConsumerSurvey> ConsumerSurveys => Set<ConsumerSurvey>();
+        public DbSet<ConsumerSurveyAttachment> ConsumerSurveyAttachments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +32,12 @@ namespace SolarPanelInstallationManagement.Data
                     method.Invoke(null, new object[] { modelBuilder });
                 }
             }
+
+            modelBuilder.Entity<ConsumerSurveyAttachment>()
+                .HasOne(a => a.ConsumerSurvey)
+                .WithMany(s => s.Attachments)
+                .HasForeignKey(a => a.ConsumerSurveySno)
+                .HasPrincipalKey(s => s.Sno);
         }
 
         private static void SetSoftDeleteFilter<TEntity>(ModelBuilder builder) where TEntity : class, ISoftDelete

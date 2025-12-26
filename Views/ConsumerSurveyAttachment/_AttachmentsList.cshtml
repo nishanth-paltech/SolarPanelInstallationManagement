@@ -1,0 +1,60 @@
+﻿@using System.Text.Encodings.Web
+@model IEnumerable<SolarPanelInstallationManagement.Models.Entities.ConsumerSurveyAttachment>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="text-muted">
+        No attachments found.
+    </div>
+}
+else
+{
+    <div class="row g-3">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3 col-sm-4 col-6">
+                <div class="card shadow-sm h-100">
+
+                    @if (!string.IsNullOrEmpty(item.ContentType)
+                   && item.ContentType.StartsWith("image/"))
+                    {
+                        <img src="/ConsumerSurveyAttachment/Download/@item.Id"
+                             class="card-img-top"
+                             style="height:160px; object-fit:cover;"
+                             alt="@item.OriginalFileName" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center"
+                             style="height:160px; background:#f8f9fa;">
+                            <i class="bi bi-file-earmark-text fs-1 text-secondary"></i>
+                        </div>
+                    }
+
+                    <div class="card-body p-2 text-center">
+                        <small class="d-block text-truncate"
+                               title="@item.OriginalFileName">
+                            @item.OriginalFileName
+                        </small>
+                    </div>
+
+                    <div class="card-footer p-2 text-center">
+                        <a href="/ConsumerSurveyAttachment/Download/@item.Id"
+                           class="btn btn-sm btn-outline-primary me-1"
+                           title="Download">
+                            <i class="bi bi-download"></i>
+                        </a>
+
+                        <button type="button"
+                                class="btn btn-sm btn-outline-danger"
+                                title="Delete"
+                                onclick="deleteAttachment(@item.Id, '@JavaScriptEncoder.Default.Encode(item.OriginalFileName)')">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+        }
+    </div>
+}
