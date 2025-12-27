@@ -77,6 +77,31 @@ namespace SolarPanelInstallationManagement
 
             var app = builder.Build();
 
+            // ============================
+            // APPLY PENDING MIGRATIONS
+            // ============================
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    var dbContext = services.GetRequiredService<AppDbContext>();
+
+                    // Applies pending migrations (if any)
+                    dbContext.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    // Optional: log error (recommended)
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating the database.");
+
+                    // Optional: rethrow if you want app startup to fail
+                    // throw;
+                }
+            }
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
